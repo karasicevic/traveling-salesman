@@ -6,7 +6,7 @@
 
 ;odredjuje ukupnu distancu izmedju svih gradova u ruti, pun krug/RADI
 (defn distance [route]
-  (reduce + (map (fn [[c1 c2]] (get data/distances [c1 c2] (get data/distances [c2 c1])))
+  (reduce + (map (fn [[c1 c2]] (get-in data/distances [c1 c2] (get data/distances [c2 c1])))
                  (partition 2 1 (conj route (first route))))))
 
 ;kreira random rutu/RADI
@@ -104,13 +104,22 @@
 
 ;;Osnovna logika aplikacije
 (defn main-menu []
-  (welcome-message)
-  (print-cities)
-  (let [user-cities (get-user-cities)
-        best-route (genetic-algorithm 100 (count user-cities) user-cities)
-        best-distance (distance best-route)]
-    (println "Najbolja ruta:" best-route)
-    (println "Ukupna distanca:" best-distance)))
+  (loop []
+    (welcome-message)
+    (print-cities)
+    (let [user-cities (get-user-cities)
+          best-route (genetic-algorithm 100 (count user-cities) user-cities)
+          best-distance (distance best-route)]
+      (println "Najbolja ruta:" best-route)
+      (println "Ukupna distanca:" best-distance " kilometara.")
+      (println "Da li želite da izvršite upit za nove gradove? (da/ne)")
+      (let [response (clojure.string/trim (read-line))]
+        (cond
+          (= "da" response) (recur)
+          (= "ne" response) (println "Hvala što ste koristili aplikaciju. Do viđenja!")
+          :else (do (println "Niste uneli validan odgovor. Molimo pokušajte ponovo.")
+                    (recur)))))))
+
 
 (defn -main
   [& args]
