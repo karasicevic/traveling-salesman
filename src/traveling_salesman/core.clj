@@ -1,8 +1,7 @@
 (ns traveling-salesman.core
-  (:require [traveling-salesman.data :as data])
+  (:require [clojure.string :as str]
+            [traveling-salesman.data :as data])
   (:gen-class))
-
-
 
 
 ;odredjuje ukupnu distancu izmedju svih gradova u ruti, pun krug/RADI
@@ -10,16 +9,11 @@
   (reduce + (map (fn [[c1 c2]] (get data/distances [c1 c2] (get data/distances [c2 c1])))
                  (partition 2 1 (conj route (first route))))))
 
-
 ;kreira random rutu/RADI
-;; (defn random-route []
-;;   (shuffle data/cities))
 (defn random-route [cities]
   (shuffle cities))
 
 ;kreira zadati broj ruta/RADI
-;; (defn population [size]
-;;   (repeatedly size random-route))
 (defn population [size cities]
   (repeatedly size #(random-route cities)))
 
