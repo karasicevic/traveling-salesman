@@ -63,11 +63,11 @@
 
 ; Prints a welcome message to the user
 (defn welcome-message []
-  (println "Welcome, let's solve your problem, traveling salesperson!"))
+  (println "Dobrodosli, hajde da resimo tvoj problem, trgovacki putnice"))
 
 ; Prints the list of available cities with their corresponding indexes
 (defn print-cities []
-  (println "Available cities:")
+  (println "Dostupni gradovi:")
   (doseq [[idx city] (map-indexed (fn [i city] [(inc i) city]) data/cities)]
     (println (str idx ". " city))))
 
@@ -79,7 +79,7 @@
 
 ; Prompts the user to enter the cities they want to visit and returns the selected cities
 (defn get-user-cities []
-  (println "Enter the numbers of the cities you want to visit, separated by spaces (e.g., 1 2 3):")
+  (println "Unesite brojeve gradova koje zelite da posetite, odvojene razmakom (npr. 1 2 3):")
   (let [input (clojure.string/trim (read-line))
         indexes (map parse-int (str/split input #"\s+"))
         valid-indexes (filter #(and (integer? %) (> % 0) (<= % (count data/cities))) indexes)]
@@ -87,7 +87,7 @@
              (not-any? nil? indexes))
       (map #(nth data/cities (dec %)) indexes)
       (do
-        (println "Invalid input.")
+        (println "Nevalidan unos.")
         (recur)))))
 
 ; Main menu loop that guides the user through the process of selecting cities and finding the best route
@@ -98,14 +98,14 @@
     (let [user-cities (get-user-cities)
           best-route (genetic-algorithm 100 (count user-cities) user-cities)
           best-distance (distance best-route)]
-      (println "Best route:" best-route)
-      (println "Total distance:" best-distance " kilometers.")
-      (println "Would you like to query new cities? (yes/no)")
+      (println "Najbolja ruta:" best-route)
+      (println "Ukupna distanca:" best-distance " kilometara.")
+      (println "Da li zelite da izvrsite upit za nove gradove? (da/ne)")
       (let [response (clojure.string/trim (read-line))]
         (cond
-          (= "yes" response) (recur)
-          (= "no" response) (println "Thank you for using the application. Goodbye!")
-          :else (do (println "Invalid response. Please try again.")
+          (= "da" response) (recur)
+          (= "ne" response) (println "Hvala sto ste koristili aplikaciju. Do vidjenja!")
+          :else (do (println "Niste uneli validan odgovor. Molimo pokusajte ponovo.")
                     (recur)))))))
 
 ; Entry point for the application
